@@ -1,0 +1,279 @@
+#pragma version 8
+intcblock 0 1 4
+bytecblock 0x6173615f6964
+txn NumAppArgs
+intc_0 // 0
+==
+bnz main_l10
+txna ApplicationArgs 0
+pushbytes 0x2adc0060 // "opt_in(asset)void"
+==
+bnz main_l9
+txna ApplicationArgs 0
+pushbytes 0x8cdae749 // "deposit(axfer,account)void"
+==
+bnz main_l8
+txna ApplicationArgs 0
+pushbytes 0x35b2a262 // "swap_nft(asset,axfer,account)void"
+==
+bnz main_l7
+txna ApplicationArgs 0
+pushbytes 0x413bd40f // "withdraw_nft(asset)void"
+==
+bnz main_l6
+err
+main_l6:
+txn OnCompletion
+intc_0 // NoOp
+==
+txn ApplicationID
+intc_0 // 0
+!=
+&&
+assert
+callsub withdrawnftcaster_8
+intc_1 // 1
+return
+main_l7:
+txn OnCompletion
+intc_0 // NoOp
+==
+txn ApplicationID
+intc_0 // 0
+!=
+&&
+assert
+callsub swapnftcaster_7
+intc_1 // 1
+return
+main_l8:
+txn OnCompletion
+intc_0 // NoOp
+==
+txn ApplicationID
+intc_0 // 0
+!=
+&&
+assert
+callsub depositcaster_6
+intc_1 // 1
+return
+main_l9:
+txn OnCompletion
+intc_0 // NoOp
+==
+txn ApplicationID
+intc_0 // 0
+!=
+&&
+assert
+callsub optincaster_5
+intc_1 // 1
+return
+main_l10:
+txn OnCompletion
+intc_0 // NoOp
+==
+bnz main_l12
+err
+main_l12:
+txn ApplicationID
+intc_0 // 0
+==
+assert
+callsub create_0
+intc_1 // 1
+return
+
+// create
+create_0:
+proto 0 0
+bytec_0 // "asa_id"
+intc_0 // 0
+app_global_put
+retsub
+
+// opt_in
+optin_1:
+proto 1 0
+itxn_begin
+intc_2 // axfer
+itxn_field TypeEnum
+global CurrentApplicationAddress
+itxn_field AssetReceiver
+frame_dig -1
+txnas Assets
+itxn_field XferAsset
+intc_0 // 0
+itxn_field AssetAmount
+intc_0 // 0
+itxn_field Fee
+itxn_submit
+retsub
+
+// deposit
+deposit_2:
+proto 2 0
+txn Sender
+global CreatorAddress
+==
+// unauthorized
+assert
+bytec_0 // "asa_id"
+app_global_get
+intc_0 // 0
+==
+assert
+frame_dig -2
+gtxns AssetReceiver
+global CurrentApplicationAddress
+==
+assert
+frame_dig -2
+gtxns AssetAmount
+intc_1 // 1
+==
+assert
+bytec_0 // "asa_id"
+frame_dig -2
+gtxns XferAsset
+app_global_put
+retsub
+
+// swap_nft
+swapnft_3:
+proto 3 0
+frame_dig -2
+gtxns AssetReceiver
+global CurrentApplicationAddress
+==
+assert
+frame_dig -2
+gtxns AssetAmount
+intc_1 // 1
+==
+assert
+itxn_begin
+intc_2 // axfer
+itxn_field TypeEnum
+txn Sender
+itxn_field AssetReceiver
+bytec_0 // "asa_id"
+app_global_get
+itxn_field XferAsset
+intc_1 // 1
+itxn_field AssetAmount
+intc_0 // 0
+itxn_field Fee
+itxn_submit
+bytec_0 // "asa_id"
+frame_dig -2
+gtxns XferAsset
+app_global_put
+retsub
+
+// withdraw_nft
+withdrawnft_4:
+proto 1 0
+txn Sender
+global CreatorAddress
+==
+// unauthorized
+assert
+bytec_0 // "asa_id"
+app_global_get
+intc_0 // 0
+!=
+assert
+itxn_begin
+intc_2 // axfer
+itxn_field TypeEnum
+txn Sender
+itxn_field AssetReceiver
+bytec_0 // "asa_id"
+app_global_get
+itxn_field XferAsset
+intc_1 // 1
+itxn_field AssetAmount
+intc_0 // 0
+itxn_field Fee
+itxn_submit
+bytec_0 // "asa_id"
+intc_0 // 0
+app_global_put
+retsub
+
+// opt_in_caster
+optincaster_5:
+proto 0 0
+intc_0 // 0
+txna ApplicationArgs 1
+intc_0 // 0
+getbyte
+frame_bury 0
+frame_dig 0
+callsub optin_1
+retsub
+
+// deposit_caster
+depositcaster_6:
+proto 0 0
+intc_0 // 0
+dup
+txna ApplicationArgs 1
+intc_0 // 0
+getbyte
+frame_bury 1
+txn GroupIndex
+intc_1 // 1
+-
+frame_bury 0
+frame_dig 0
+gtxns TypeEnum
+intc_2 // axfer
+==
+assert
+frame_dig 0
+frame_dig 1
+callsub deposit_2
+retsub
+
+// swap_nft_caster
+swapnftcaster_7:
+proto 0 0
+intc_0 // 0
+dupn 2
+txna ApplicationArgs 1
+intc_0 // 0
+getbyte
+frame_bury 0
+txna ApplicationArgs 2
+intc_0 // 0
+getbyte
+frame_bury 2
+txn GroupIndex
+intc_1 // 1
+-
+frame_bury 1
+frame_dig 1
+gtxns TypeEnum
+intc_2 // axfer
+==
+assert
+frame_dig 0
+frame_dig 1
+frame_dig 2
+callsub swapnft_3
+retsub
+
+// withdraw_nft_caster
+withdrawnftcaster_8:
+proto 0 0
+intc_0 // 0
+txna ApplicationArgs 1
+intc_0 // 0
+getbyte
+frame_bury 0
+frame_dig 0
+callsub withdrawnft_4
+retsub

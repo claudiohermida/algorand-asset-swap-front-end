@@ -1,0 +1,66 @@
+{
+    "name": "NFTSwap",
+    "methods": [
+        {
+            "name": "opt_in",
+            "args": [
+                {
+                    "type": "asset",
+                    "name": "asset"
+                }
+            ],
+            "returns": {
+                "type": "void"
+            }
+        },
+        {
+            "name": "deposit",
+            "args": [
+                {
+                    "type": "axfer",
+                    "name": "asset_transfer"
+                },
+                {
+                    "type": "account",
+                    "name": "app_address"
+                }
+            ],
+            "returns": {
+                "type": "void"
+            }
+        },
+        {
+            "name": "swap_nft",
+            "args": [
+                {
+                    "type": "asset",
+                    "name": "asset"
+                },
+                {
+                    "type": "axfer",
+                    "name": "asset_transfer"
+                },
+                {
+                    "type": "account",
+                    "name": "app_address"
+                }
+            ],
+            "returns": {
+                "type": "void"
+            }
+        },
+        {
+            "name": "withdraw_nft",
+            "args": [
+                {
+                    "type": "asset",
+                    "name": "asset"
+                }
+            ],
+            "returns": {
+                "type": "void"
+            }
+        }
+    ],
+    "networks": {}
+}

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Asset Swap</title>
+</head>
+
+<body>
+    <h1>Swaps con Beaker</h1>
+    <div id="status">Esperando que se cree la app</div>
+    <label for="accounts">Cuenta: </label>
+    <select id="accounts"></select>
+    <br>
+    <hr><br>
+
+    <button id="connect">Conectar</button>
+    <br>
+    <hr><br>
+
+    <button id="createBtn" disabled="true">Crear y Fondear Aplicación</button>
+    <br>
+    <hr><br>
+
+
+
+    <!-- Input the ID of the NFT to deposit, we'll build the opt-in, transfer and deposit calls  -->
+
+    <label for="nft">Asset ID</label>
+    <input type="number" id="nft" min="0" value="10458941">
+    <br>
+    <button id="depositBtn" disabled=true> Depositar Asset</button>
+    <br>
+    <hr><br>
+
+
+    <!-- Swap for another NFT  -->
+
+    <label for="swapNFT">Ingresar Asset para intercambio (Microalgos)</label>
+    <input type="number" id="swapNFT" min="0">
+    <br>
+    <button id="swapBtn" disabled=true> Enviar Asset</button>
+
+    <br>
+    <hr><br>
+    <button id="withdrawBtn" disabled=true> Recuperar Asset Depositado</button>
+</body>
+
+</html>
